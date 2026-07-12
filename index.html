@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hydra Playlist Display</title>
-    <style>
+   <style>
         * {
             margin: 0;
             padding: 0;
@@ -16,20 +16,40 @@
             overflow: hidden;
             background-color: #000;
         }
-        iframe {
-            width: 100%;
-            height: 100%;
+
+        /* 1. Force the iframe container to render at true massive hardware pixel spec */
+        #hydra-viewer {
+            width: 5760px;   /* Change to your exact overall wall width */
+            height: 2160px;  /* Change to your exact overall wall height */
             border: none;
-            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            
+            /* 2. Scale it back visually to fit the browser viewport perfectly */
+            transform-origin: top left;
+            transform: scale(calc(100vw / 5760)); 
         }
     </style>
 </head>
 <body>
 
     <!-- The single full-screen window hosting the patches -->
-    <iframe id="hydra-viewer" src=""allow="camera; microphone; display-capture"></iframe>
+    //iframe id="hydra-viewer" src=""allow="camera; microphone; display-capture"
+      <iframe id="hydra-viewer" src="" allow="camera https://hydra.ojack.xyz; microphone https://hydra.ojack.xyz; display-capture https://hydra.ojack.xyz"></iframe>
 
     <script>
+
+        // Force the host page to ask for webcam access immediately on load
+navigator.mediaDevices.getUserMedia({ video: true })
+    .then((stream) => {
+        console.log("Main page webcam permission granted.");
+        // Stop the temporary stream immediately so your camera light doesn't just stay on
+        stream.getTracks().forEach(track => track.stop());
+    })
+    .catch((err) => {
+        console.error("Camera access denied or blocked on host page:", err);
+    });
         // 1. Add your Hydra links here (URLs from the Hydra web editor)
         const hydraLinks = [
             "https://hydra.ojack.xyz/?code=JTJGJTJGYW5naW5lbW9pcmVlJTBBc3BlZWQlMjAlM0QlMjAuMTIlMEElMkYlMkZzZXRSZXNvbHV0aW9uKDEwMCUyQzEwMDApJTBBbGV0JTIwdHJpJTIwJTNEJTIwKCklMjAlM0QlM0UlMjBzaGFwZSgzJTJDLjMlMkMuMDAzKS5yb3RhdGUoMS4wNSkuY29sb3IoMSUyQzElMkMwKSUwQWxldCUyMGRvdHMlMjAlM0QlMjAoKSUyMCUzRCUzRSUyMHNoYXBlKDEzMyUyQyUyMCU1Qi4zMCUyQy45OCU1RC5zbW9vdGgoKSklMjAlMEElMjAlMjAucmVwZWF0KDMwJTJDJTIwMzApJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTBBJTIwJTIwLnNjcm9sbFgoJTVCMiUyQy0yJTVEJTJDMC4yMyklMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMEFkb3RzKCklMEElMjAlMjAucm90YXRlKCgpJTIwJTNEJTNFJTIwdGltZSUyMColMjAwLjkxMiklMjAlMjAlMjAlMjAlMjAlMEElMjAlMjAuZGlmZiglMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMEElMjAlMjAlMjAlMjBkb3RzKCklMEElMjAlMjAlMjAlMjAlMjAlMjAuaW52ZXJ0KDApJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTBBJTIwJTIwJTIwJTIwJTIwJTIwLnJvdGF0ZSgoKSUyMCUzRCUzRSUyMC10aW1lJTIwKiUyMDAuMyklMEElMjAlMjAlMjAlMjAlMjAlMjAucm90YXRlKDAuMDUpJTBBJTIwJTIwLmRpZmYob3NjKDIpLmNvbnRyYXN0KDMpLnBpeGVsYXRlKCU1QjQlMkMxJTJDMiU1RC5lYXNlKCkpLmthbGVpZCgxKS5yb3RhdGUoJTIwKCklMjAlM0QlM0UlMjB0aW1lJTI1MzYwJTJDJTIwLjAwMSkpKSUyMCUwQS5sdW1hKDAuNSUyQzAuMSkuYnJpZ2h0bmVzcygtLjEpJTBBLmJsZW5kKHRyaSgpKSUwQS5zY2FsZSgxJTJDJTIwd2luZG93LmlubmVySGVpZ2h0JTIwJTJGJTIwd2luZG93LmlubmVyV2lkdGgpJTBBJTBBJTIwJTIwLm91dCgpJTBBJTBB&showCode=false",
