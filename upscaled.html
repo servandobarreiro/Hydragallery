@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Res Hydra Switcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        /* 1. Force the iframe container to render at true massive hardware pixel spec */
+        #hydra-viewer {
+            width: 5760px;   /* Change to your exact overall wall width */
+            height: 2160px;  /* Change to your exact overall wall height */
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            
+            /* 2. Scale it back visually to fit the browser viewport perfectly */
+            transform-origin: top left;
+            transform: scale(calc(100vw / 5760)); 
+        }
+    </style>
+</head>
+<body>
+
+    <iframe id="hydra-viewer" src=""></iframe>
+
+    <script>
+        const hydraLinks = [
+            "https://ojack.xyz",
+            "https://ojack.xyz"
+        ];
+
+        const rotationInterval = 120000; 
+        let currentIndex = 0;
+        const iframe = document.getElementById('hydra-viewer');
+
+        function switchPatch() {
+            iframe.src = hydraLinks[currentIndex];
+            currentIndex = (currentIndex + 1) % hydraLinks.length;
+        }
+
+        switchPatch();
+        setInterval(switchPatch, rotationInterval);
+    </script>
+
+</body>
+</html>

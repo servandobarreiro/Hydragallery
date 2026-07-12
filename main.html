@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydra Playlist Display</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- The single full-screen window hosting the patches -->
+    <iframe id="hydra-viewer" src=""allow="camera; microphone; display-capture"></iframe>
+
+    <script>
+        // 1. Add your Hydra links here (URLs from the Hydra web editor)
+        const hydraLinks = [
+            "https://hydra.ojack.xyz/?code=JTJGJTJGYW5naW5lbW9pcmVlJTBBc3BlZWQlMjAlM0QlMjAuMTIlMEElMkYlMkZzZXRSZXNvbHV0aW9uKDEwMCUyQzEwMDApJTBBbGV0JTIwdHJpJTIwJTNEJTIwKCklMjAlM0QlM0UlMjBzaGFwZSgzJTJDLjMlMkMuMDAzKS5yb3RhdGUoMS4wNSkuY29sb3IoMSUyQzElMkMwKSUwQWxldCUyMGRvdHMlMjAlM0QlMjAoKSUyMCUzRCUzRSUyMHNoYXBlKDEzMyUyQyUyMCU1Qi4zMCUyQy45OCU1RC5zbW9vdGgoKSklMjAlMEElMjAlMjAucmVwZWF0KDMwJTJDJTIwMzApJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTBBJTIwJTIwLnNjcm9sbFgoJTVCMiUyQy0yJTVEJTJDMC4yMyklMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMEFkb3RzKCklMEElMjAlMjAucm90YXRlKCgpJTIwJTNEJTNFJTIwdGltZSUyMColMjAwLjkxMiklMjAlMjAlMjAlMjAlMjAlMEElMjAlMjAuZGlmZiglMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMEElMjAlMjAlMjAlMjBkb3RzKCklMEElMjAlMjAlMjAlMjAlMjAlMjAuaW52ZXJ0KDApJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTBBJTIwJTIwJTIwJTIwJTIwJTIwLnJvdGF0ZSgoKSUyMCUzRCUzRSUyMC10aW1lJTIwKiUyMDAuMyklMEElMjAlMjAlMjAlMjAlMjAlMjAucm90YXRlKDAuMDUpJTBBJTIwJTIwLmRpZmYob3NjKDIpLmNvbnRyYXN0KDMpLnBpeGVsYXRlKCU1QjQlMkMxJTJDMiU1RC5lYXNlKCkpLmthbGVpZCgxKS5yb3RhdGUoJTIwKCklMjAlM0QlM0UlMjB0aW1lJTI1MzYwJTJDJTIwLjAwMSkpKSUyMCUwQS5sdW1hKDAuNSUyQzAuMSkuYnJpZ2h0bmVzcygtLjEpJTBBLmJsZW5kKHRyaSgpKSUwQS5zY2FsZSgxJTJDJTIwd2luZG93LmlubmVySGVpZ2h0JTIwJTJGJTIwd2luZG93LmlubmVyV2lkdGgpJTBBJTBBJTIwJTIwLm91dCgpJTBBJTBB&showCode=false",
+            "https://hydra.ojack.xyz/?code=JTBBc3BlZWQlMjAlM0QlMjAxJTBBc2hhcGUoMTAwJTJDJTIwMC40MyUyQyUyMC4zMikuZGlmZihzaGFwZSgxMDAlMkMlMjAwLjM5JTJDJTIwLjA3KSkubXVsdChvc2MoMyUyQzAuNSUyQzIpKSUyMCUyMCUyMCUwQS5tb2R1bGF0ZShub2lzZSguMDEpKSUwQS5kaWZmKG5vaXNlKC40KSUyQy41KSUyMCUwQS5sdW1hKGNjKDEpJTJDLjIpJTBBLmRpZmYoc3JjKG8wKSUyQy42MSklMEElMDklMjAlMjAubW9kdWxhdGUob3NjKC4yJTJDMC45MSUyQzAuNSkpJTIwJTIwJTIwJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwLmFkZChzcmMobzApJTJDMC4wMDUpJTBBLmx1bWEoLjUlMkMuMDE1KSUwQS5pbnZlcnQoKSUwQSUyMCUyMC5vdXQobzApJTBB&showCode=false",
+            "https://hydra.ojack.xyz/?code=YXdhaXQlMjBsb2FkU2NyaXB0JTBBKCUwQSUyMCUyMCdodHRwcyUzQSUyRiUyRmNkbi5qc2RlbGl2ci5uZXQlMkZucG0lMkZoeWRyYS1taWRpJTQwbGF0ZXN0JTJGZGlzdCUyRmluZGV4LmpzJyUwQSklMEFhd2FpdCUyMG1pZGkuc3RhcnQoJTdCJTIwY2hhbm5lbCUzQSUyMCcqJyUyQyUyMGlucHV0JTNBJTIwJyonJTIwJTdEKSUwQSUyRiUyRm1pZGkuc2hvdygpJTBBJTJGJTJGJTIwJTIwJTIwJTIwbm90ZSgnKicpJTIwJTJGJTJGJTIwY2MoMSklMEElMkYlMkYtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSUwQXNwZWVkJTIwJTNEJTIwMSUwQWZmdCUyMCUzRCUyMEFycmF5KDQpJTBBc2hhcGUoMTAwJTJDJTIwMC43MyUyQyUyMC4zMikuZGlmZihzaGFwZSgxMDAlMkMlMjAwLjY5JTJDJTIwLjA3KSklMkYlMkYubXVsdChvc2MoMyUyQzAuNSUyQzIpKSUwQS5zY2FsZSgxJTJDJTIwd2luZG93LmlubmVySGVpZ2h0JTIwJTJGJTIwd2luZG93LmlubmVyV2lkdGgpJTIwJTBBLm1vZHVsYXRlKG5vaXNlKC4wMSkpJTBBLmRpZmYobm9pc2UoLjQpJTJDLjUpJTIwJTBBLmx1bWEoKCklM0QlM0VhLmZmdCU1QjIlNUQlMkMuMiklMEElMkYlMkYuZGlmZihzcmMobzApJTJDLjYxKSUwQSUwOSUyMCUyMC5tb2R1bGF0ZShvc2MoLjIlMkMwLjkxJTJDMC41KSklMjAlMjAlMjAlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMkYlMkYlMjAuYWRkKHNyYyhvMCklMkMwLjAwNSklMEEubHVtYSguNSUyQy4wMTUpJTBBLmludmVydCgpJTBBJTIwJTIwLm91dChvMCklMEElMkYlMkYx&showCode=false",
+            "https://hydra.ojack.xyz/?code=JTBBc3BlZWQlMjAlM0QlMjAuMjElMEFmZnQlMjAlM0QlMjBBcnJheSg0KSUwQXNoYXBlKDEwMCUyQyUyMDAuNzMlMkMlMjAuMTIpLmRpZmYoc2hhcGUoMTAwJTJDJTIwMC43MiUyQyUyMC4wMDcpKS5hZGQob3NjKDMzJTJDMC4zMSUyQzEpKSUwQS5zY2FsZSgxJTJDJTIwd2luZG93LmlubmVySGVpZ2h0JTIwJTJGJTIwd2luZG93LmlubmVyV2lkdGgpJTIwJTBBLmJyaWdodG5lc3MoLS4wOCklMEEubW9kdWxhdGVSb3RhdGUobm9pc2UoJTVCMSUyQzIxJTVELnNtb290aCgpJTJDMC4xNSUyQzMpLmthbGVpZCg2Nikuc2NhbGUoLjUpJTJDMiUyQzAuNjMpLnNjYWxlKC45MSklMEEuc3ViKHNyYyhvMCklMkMuNSklMEEuc2NhbGUoMSUyQyUyMHdpbmRvdy5pbm5lckhlaWdodCUyMCUyRiUyMHdpbmRvdy5pbm5lcldpZHRoKSUyMCUwQSUyMCUyMC5vdXQobzApJTBB&showCode=false",
+       
+        ];
+
+        // 2. Set rotation interval (2 minutes = 120000 milliseconds)
+        const rotationInterval = 6000; 
+
+        let currentIndex = 0;
+        const iframe = document.getElementById('hydra-viewer');
+
+        // Function to load the next patch
+        function switchPatch() {
+            iframe.src = hydraLinks[currentIndex];
+            
+            // Advance index, loop back to 0 if at the end of the list
+            currentIndex = (currentIndex + 1) % hydraLinks.length;
+        }
+
+        // Load the first patch immediately on startup
+        switchPatch();
+
+        // Trigger the switch continuously based on your interval
+        setInterval(switchPatch, rotationInterval);
+    </script>
+
+</body>
+</html>
