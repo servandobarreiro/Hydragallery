@@ -17,18 +17,14 @@
             background-color: #000;
         }
 
-        /* 1. Force the iframe container to render at true massive hardware pixel spec */
+        /* Scaled automatically to whatever size the browser window has */
         #hydra-viewer {
-            width: 5760px;   /* Change to your exact overall wall width */
-            height: 2160px;  /* Change to your exact overall wall height */
+            width: 100vw;   
+            height: 100vh;  
             border: none;
             position: absolute;
             top: 0;
             left: 0;
-            
-            /* 2. Scale it back visually to fit the browser viewport perfectly */
-            transform-origin: top left;
-            transform: scale(calc(100vw / 5760)); 
         }
     </style>
 </head>
